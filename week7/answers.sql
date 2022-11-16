@@ -1,5 +1,4 @@
 -- Create your tables, views, functions and procedures here!
-DROP SCHEMA destruction;
 CREATE SCHEMA destruction;
 USE destruction;
 
