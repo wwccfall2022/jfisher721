@@ -102,3 +102,42 @@ CREATE TABLE equipped (
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
+CREATE OR REPLACE VIEW character_items AS
+	SELECT c.character_id, c.name AS character_name, 
+		it.name AS item_name, it.armor, it.damage
+    FROM characters c
+    INNER JOIN inventory iv
+		ON c.character_id = iv.character_id
+	INNER JOIN items it
+		ON iv.item_id = it.item_id
+	UNION
+    SELECT c.character_id, c.name AS character_name, 
+		it.name AS item_name, it.armor AS armor, it.damage AS damage
+    FROM characters c
+	INNER JOIN equipped e
+		ON c.character_id = e.character_id
+	INNER JOIN items it
+		ON e.item_id = it.item_id
+	ORDER BY character_name, item_name ASC;
+    
+CREATE OR REPLACE VIEW team_items AS
+	SELECT t.team_id, t.name AS team_name, it.name AS item_name, it.armor, it.damage
+	FROM teams t
+    INNER JOIN team_members tm
+		ON t.team_id = tm.character_id
+	INNER JOIN characters c
+	INNER JOIN inventory iv
+		ON tm.character_id = iv.character_id
+	INNER JOIN items it
+		ON iv.item_id = it.item_id
+	UNION
+    SELECT t.team_id, t.name AS team_name, it.name AS item_name, it.armor, it.damage
+    FROM teams t
+    INNER JOIN team_members tm
+		ON t.team_id = tm.character_id
+    INNER JOIN equipped e
+		ON tm.character_id = e.character_id
+	INNER JOIN items it
+		ON e.item_id = it.item_id
+	ORDER BY team_name, item_name ASC;
