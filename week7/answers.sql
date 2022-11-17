@@ -125,8 +125,7 @@ CREATE OR REPLACE VIEW team_items AS
 	SELECT t.team_id, t.name AS team_name, it.name AS item_name, it.armor, it.damage
 	FROM teams t
     INNER JOIN team_members tm
-		ON t.team_id = tm.character_id
-	INNER JOIN characters c
+		ON t.team_id = tm.team_id
 	INNER JOIN inventory iv
 		ON tm.character_id = iv.character_id
 	INNER JOIN items it
@@ -135,7 +134,7 @@ CREATE OR REPLACE VIEW team_items AS
     SELECT t.team_id, t.name AS team_name, it.name AS item_name, it.armor, it.damage
     FROM teams t
     INNER JOIN team_members tm
-		ON t.team_id = tm.character_id
+		ON t.team_id = tm.team_id
     INNER JOIN equipped e
 		ON tm.character_id = e.character_id
 	INNER JOIN items it
