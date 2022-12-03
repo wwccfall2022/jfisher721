@@ -65,3 +65,55 @@ CREATE TABLE notifications(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
+DELIMITER ;; 
+
+CREATE TRIGGER new_user
+	AFTER INSERT ON users
+    FOR EACH ROW
+BEGIN
+	DECLARE not_new_user INT UNSIGNED;
+    DECLARE recent_post INT UNSIGNED;
+	DECLARE row_not_found TINYINT DEFAULT FALSE;
+    DECLARE user_cursor CURSOR FOR
+		SELECT u.user_id
+			FROM users u
+			WHERE u.user_id != NEW.user_id;
+            
+	DECLARE CONTINUE HANDLER FOR NOT FOUND
+		SET row_not_found = TRUE;
+    
+    -- Creates the user joined posts
+	SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
+    
+	INSERT INTO posts
+		(user_id, content)
+	VALUES
+		(NEW.user_id, @new_content);
+        
+	SET recent_post = LAST_INSERT_ID();
+	
+    -- Creates the notification posts
+	OPEN user_cursor;
+	user_loop : LOOP
+	
+	FETCH user_cursor INTO not_new_user;
+	
+	IF row_not_found THEN
+		LEAVE user_loop;
+	END IF;
+	
+	INSERT INTO notifications
+		(user_id, post_id)
+	VALUES
+		(not_new_user, recent_post);
+		
+	END LOOP user_loop;
+	CLOSE user_cursor;
+END ;;
+
+-- CREATE EVENT end_sessions
+-- CREATE PROCEDURE add_post(user_id, content)
+ 
+
+DELIMITER ;
