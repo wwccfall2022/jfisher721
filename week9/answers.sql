@@ -68,11 +68,11 @@ CREATE TABLE notifications(
 
 CREATE OR REPLACE VIEW notification_posts AS
     SELECT n.user_id, u.first_name, u.last_name, p.post_id, p.content
-        FROM users u
-        LEFT OUTER JOIN posts p
-            ON u.user_id = p.user_id
-        LEFT OUTER JOIN notifications n
-            ON p.user_id = n.user_id;
+        FROM posts p
+        INNER JOIN notifications n
+		ON p.post_id = n.post_id
+	LEFT OUTER JOIN users u
+		ON n.user_id = u.user_id;
 
 DELIMITER ;; 
 
