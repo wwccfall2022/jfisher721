@@ -160,4 +160,35 @@ BEGIN
         
 	RETURN armor_sum + armor_by_id;
 END;;
+
+CREATE PROCEDURE attack(being_attacked INT, weapon_used INT)
+BEGIN
+	DECLARE character_armor INT UNSIGNED;
+    DECLARE character_damage INT UNSIGNED;
+    DECLARE character_health INT SIGNED;
+    DECLARE result INT SIGNED;
+    
+    SELECT armor_total(character_id) INTO character_armor;
+    SELECT it.damage INTO character_damage
+	FROM equipped e
+        INNER JOIN items it
+		ON e.item_id = e.character_id
+		WHERE e.equipped_id = e.character_id;
+        
+	SET result = armor - damage;
+    
+    SELECT cs.health INTO character_health
+	FROM character_stats cs
+        WHERE cs.character_id = being_attacked;
+	CASE result
+		WHEN result > 0 THEN
+			SET health = character_health - result;
+           		UPDATE character_stats SET health = character_health 
+			WHERE character_id = being_attacked;
+		WHEN health <= 0 THEN
+			DELETE FROM characters
+            		WHERE character_id = being_attacked;		
+    	END CASE;
+END;;
+
 DELIMITER ;
