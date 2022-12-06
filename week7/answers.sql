@@ -148,9 +148,8 @@ DETERMINISTIC
 BEGIN
 	DECLARE armor_by_id INT;
 	DECLARE armor_sum INT;
-    
-	SELECT cs.character_id INTO armor_by_id;
-    SELECT SUM(items.armor)
+
+    SELECT SUM(items.armor) INTO armor_by_id
 		FROM characters cs
         INNER JOIN equipped e
 			ON cs.character_id = e.item_id
