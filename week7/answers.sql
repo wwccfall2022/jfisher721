@@ -170,25 +170,25 @@ BEGIN
     
     SELECT armor_total(character_id) INTO character_armor;
     SELECT it.damage INTO character_damage
-	FROM equipped e
+		FROM equipped e
         INNER JOIN items it
-		ON e.item_id = e.character_id
+			ON e.item_id = e.character_id
 		WHERE e.equipped_id = e.character_id;
         
 	SET result = armor - damage;
     
     SELECT cs.health INTO character_health
-	FROM character_stats cs
+		FROM character_stats cs
         WHERE cs.character_id = being_attacked;
 	CASE result
 		WHEN result > 0 THEN
-			SET health = character_health - result;
-           		UPDATE character_stats SET health = character_health 
-			WHERE character_id = being_attacked;
-		WHEN health <= 0 THEN
+			SET character_health = character_health - result;
+            UPDATE character_stats SET health = character_health 
+            WHERE character_id = being_attacked;
+		WHEN character_health <= 0 THEN
 			DELETE FROM characters
-            		WHERE character_id = being_attacked;		
-    	END CASE;
+            WHERE character_id = being_attacked;		
+    END CASE;
 END;;
 
 DELIMITER ;
