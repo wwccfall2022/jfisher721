@@ -180,7 +180,7 @@ BEGIN
     SELECT cs.health INTO character_health
 		FROM character_stats cs
         WHERE cs.character_id = being_attacked;
-	CASE result
+	CASE 
 		WHEN result > 0 THEN
 			SET character_health = character_health - result;
             UPDATE character_stats SET health = character_health 
