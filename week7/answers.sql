@@ -172,8 +172,8 @@ BEGIN
     SELECT it.damage INTO character_damage
 		FROM equipped e
         INNER JOIN items it
-			ON e.item_id = e.character_id
-		WHERE e.equipped_id = e.character_id;
+			ON e.item_id = it.item_id
+		WHERE e.equipped_id = weapon_used;
         
 	SET result = armor - damage;
     
