@@ -163,12 +163,12 @@ END;;
 
 CREATE PROCEDURE attack(being_attacked INT, weapon_used INT)
 BEGIN
-	DECLARE character_armor INT UNSIGNED;
+    DECLARE character_armor INT UNSIGNED;
     DECLARE character_damage INT UNSIGNED;
     DECLARE character_health INT SIGNED;
     DECLARE result INT SIGNED;
     
-    SELECT armor_total(character_id) INTO character_armor;
+    SELECT armor_total(being_attacked) INTO character_armor;
     SELECT it.damage INTO character_damage
 		FROM equipped e
         INNER JOIN items it
