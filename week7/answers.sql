@@ -111,7 +111,7 @@ CREATE OR REPLACE VIEW character_items AS
 		ON c.character_id = iv.character_id
 	INNER JOIN items it
 		ON iv.item_id = it.item_id
-	UNION
+    UNION
     SELECT c.character_id, c.name AS character_name, 
 		it.name AS item_name, it.armor AS armor, it.damage AS damage
     FROM characters c
@@ -130,7 +130,7 @@ CREATE OR REPLACE VIEW team_items AS
 		ON tm.character_id = iv.character_id
 	INNER JOIN items it
 		ON iv.item_id = it.item_id
-	UNION
+    UNION
     SELECT t.team_id, t.name AS team_name, it.name AS item_name, it.armor, it.damage
     FROM teams t
     INNER JOIN team_members tm
@@ -149,12 +149,14 @@ BEGIN
 	DECLARE armor_by_id INT;
 	DECLARE armor_sum INT;
 
-    SELECT SUM(items.armor) INTO armor_by_id
-		FROM characters cs
+    SELECT SUM(it.armor) INTO armor_by_id
+		FROM items it
         INNER JOIN equipped e
-			ON cs.character_id = e.item_id
-		WHERE e.character_id = armor_by_id
-        INTO armor_sum;
+		ON e.character_id = e.item_id
+	WHERE e.character_id = cs.character_id;
+    SELECT cs.armor INTO armor_sum
+		FROM character_stats cs
+        WHERE character_id = cs.character_id;
         
 	RETURN armor_sum + armor_by_id;
 END;;
