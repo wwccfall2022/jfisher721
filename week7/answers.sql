@@ -152,9 +152,9 @@ BEGIN
     SELECT SUM(it.armor) INTO armor_by_id
 		FROM items it
         INNER JOIN equipped e
-		ON e.character_id = e.item_id
-	WHERE e.character_id = cs.character_id;
-    SELECT cs.armor INTO armor_sum
+			ON it.item_id = e.item_id
+		WHERE character_id = e.character_id;
+	SELECT cs.armor INTO armor_sum
 		FROM character_stats cs
         WHERE character_id = cs.character_id;
         
