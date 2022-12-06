@@ -175,7 +175,7 @@ BEGIN
 			ON e.item_id = it.item_id
 		WHERE e.equipped_id = weapon_used;
         
-	SET result = armor - damage;
+	SET result = character_armor - damage;
     
     SELECT cs.health INTO character_health
 		FROM character_stats cs
