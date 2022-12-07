@@ -127,7 +127,7 @@ CREATE EVENT clear_sessions
 	DO
         BEGIN
 	    DELETE FROM sessions
-            WHERE update_on < DATE_SUB(NOW(), INTERVAL 2 HOUR);
+            WHERE updated_on < DATE_SUB(NOW(), INTERVAL 2 HOUR);
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
