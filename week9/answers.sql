@@ -163,7 +163,7 @@ CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
         INSERT INTO notifications
 	    (user_id, post_id)
 	VALUES
-	    (friend, @new_content);
+	    (friend, recent_post);
             
 	END LOOP post_loop;
         
