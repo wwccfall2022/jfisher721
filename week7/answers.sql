@@ -227,6 +227,7 @@ BEGIN
 	(character_id, item_id)
 	VALUES
 	(character_equipped, equipped_item);
+END;;
 
 CREATE PROCEDURE set_winners(winning INT UNSIGNED)
 BEGIN
@@ -260,7 +261,6 @@ BEGIN
 		(team_member_id, member_name);
 	END LOOP winners_loop;
     CLOSE winners_cursor;		
-END;;
 END;;
 
 DELIMITER ;
