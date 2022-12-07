@@ -210,4 +210,23 @@ BEGIN
 	(character_inventory, inventory_item);
 END;;
 
+CREATE PROCEDURE unequip(remove_id INT UNSIGNED)
+BEGIN
+    DECLARE character_equipped INT UNSIGNED;
+    DECLARE equipped_item INT UNSIGNED;
+    
+    SELECT e.character_id INTO character_equipped
+	FROM  equipped e
+        WHERE remove_id = e.equipped_id;
+    SELECT e.item_id INTO equipped_item
+	FROM equipped e
+        WHERE remove_id = e.equipped_id;
+    DELETE FROM equipped e
+	WHERE equipped_id = remove_id;
+    INSERT INTO inventory
+	(character_id, item_id)
+	VALUES
+	(character_equipped, equipped_item);
+END;;
+
 DELIMITER ;
