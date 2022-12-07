@@ -82,12 +82,12 @@ CREATE TRIGGER new_user
 BEGIN
     DECLARE not_new_user INT UNSIGNED;
     DECLARE recent_post INT UNSIGNED;
-    DECLARE row_not_found TINYINT DEFAULT FALSE
+    DECLARE row_not_found TINYINT DEFAULT FALSE;
     
     DECLARE user_cursor CURSOR FOR
-	SELECT user_id
-	    FROM users 
-	WHERE user_id != NEW.user_id;
+	SELECT u.user_id
+	    FROM users u
+	WHERE u.user_id != NEW.user_id;
             
     DECLARE CONTINUE HANDLER FOR NOT FOUND
 	SET row_not_found = TRUE;
