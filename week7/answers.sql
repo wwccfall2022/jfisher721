@@ -191,4 +191,23 @@ BEGIN
     END CASE;
 END;;
 
+CREATE PROCEDURE equip(equip_id INT UNSIGNED)
+BEGIN
+    DECLARE character_inventory INT UNSIGNED;
+    DECLARE inventory_item INT UNSIGNED;
+    
+    SELECT i.character_id INTO character_inventory
+	FROM  inventory i
+        WHERE equip_id = i.inventory_id;
+    SELECT i.item_id INTO inventory_item
+	FROM inventory i
+        WHERE equip_id = i.inventory_id;
+    DELETE FROM inventory
+    	WHERE i.inventory_id = equip_id;
+    INSERT INTO equipped
+	(character_id, item_id)
+    VALUES
+	(character_inventory, inventory_item);
+END;;
+
 DELIMITER ;
