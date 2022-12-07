@@ -131,7 +131,7 @@ CREATE EVENT clear_sessions
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
-CREATE PROCEDURE add_post(user_id INT UNSIGNED, content VARCHAR(70))
+CREATE PROCEDURE add_post(friend INT UNSIGNED, recent_post VARCHAR(70))
     BEGIN
 	DECLARE friend INT UNSIGNED;
        	DECLARE recent_post INT UNSIGNED;
