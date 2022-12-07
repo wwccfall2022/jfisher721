@@ -127,7 +127,7 @@ CREATE EVENT clear_sessions
 	DO
         BEGIN
 	    DELETE FROM sessions
-            WHERE last_update < DATE_SUB(NOW(), INTERVAL 2 HOUR);
+            WHERE update_on < DATE_SUB(NOW(), INTERVAL 2 HOUR);
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
@@ -168,6 +168,5 @@ CREATE PROCEDURE add_post(friend_post INT UNSIGNED, friend_content VARCHAR(70))
         
         CLOSE post_cursor;
     END;;
- 
-
+    
 DELIMITER ;
