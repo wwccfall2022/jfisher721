@@ -227,6 +227,40 @@ BEGIN
 	(character_id, item_id)
 	VALUES
 	(character_equipped, equipped_item);
+
+CREATE PROCEDURE set_winners(winning INT UNSIGNED)
+BEGIN
+    DECLARE team_member_id INT UNSIGNED;
+    DECLARE member_name VARCHAR(30);
+    DECLARE row_not_found INT DEFAULT FALSE;
+    
+    DECLARE winners_cursor CURSOR FOR
+	SELECT tm.character_id, c.name
+	    FROM team_members tm
+	    INNER JOIN characters c
+	        ON tm.character_id = c.character_id
+		WHERE tm.team_id = winning;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+	SET row_not_found = TRUE;
+        
+	DELETE FROM winners;
+    
+    OPEN winners_cursor;
+    winners_loop : LOOP
+    
+    FETCH winners_cursor INTO team_member_id, member_name;
+    
+    IF row_not_found THEN
+		LEAVE winners_loop;
+	END IF;
+    
+    INSERT INTO winners
+		(character_id, name)
+	VALUES
+		(team_member_id, member_name);
+	END LOOP winners_loop;
+    CLOSE winners_cursor;		
+END;;
 END;;
 
 DELIMITER ;
