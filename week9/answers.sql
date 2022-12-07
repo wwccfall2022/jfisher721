@@ -130,6 +130,44 @@ CREATE EVENT clear_sessions
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
+CREATE PROCEDURE add_post(user_id, content)
+	BEGIN
+	    DECLARE friend INT UNSIGNED;
+       	    DECLARE recent_post INT UNSIGNED;
+            DECLARE row_not_found INT DEFAULT FALSE;
+        
+            DECLARE post_cursor CURSOR FOR
+	        SELECT friend_id FROM friends
+                WHERE user_id = recent_post;
+            
+	    DECLARE CONTINUE HANDLER FOR NOT FOUND
+	        SET row_not_found = TRUE;
+            
+	        SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
+        
+	    INSERT INTO posts
+			(user_id, content)
+		VALUES
+			(recent_post, @new_content);
+		
+            SET recent_post = LAST_INSERT_ID();
+        
+            OPEN post_cursor;
+		post_loop : LOOP
+		FETCH post_cursor INTO friend;
+        	IF row_not_found THEN
+			LEAVE post_loop;
+		END IF;
+        
+            INSERT INTO notifications
+		(user_id, post_id)
+	    VALUES
+		(friend, recent_post);
+            
+	    END LOOP post_loop;
+        
+            CLOSE post_cursor;
+      END;;
  
 
 DELIMITER ;
