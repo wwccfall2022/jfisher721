@@ -131,7 +131,7 @@ CREATE EVENT clear_sessions
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
-CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
+CREATE PROCEDURE add_post(friend_post INT UNSIGNED, friend_content VARCHAR(70))
     BEGIN
 	DECLARE friend INT UNSIGNED;
        	DECLARE recent_post INT UNSIGNED;
@@ -143,18 +143,17 @@ CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
             
 	DECLARE CONTINUE HANDLER FOR NOT FOUND
 	    SET row_not_found = TRUE;
-            
-	    SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
         
 	INSERT INTO posts
 	    (user_id, content)
 	VALUES
-	    (friend, @new_content);
+	    (friend_post, friend_content);
 		
         SET recent_post = LAST_INSERT_ID();
         
         OPEN post_cursor;
 	post_loop : LOOP
+	
 	FETCH post_cursor INTO friend;
         IF row_not_found THEN
 	    LEAVE post_loop;
