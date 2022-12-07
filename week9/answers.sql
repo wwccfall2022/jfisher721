@@ -139,7 +139,7 @@ CREATE PROCEDURE add_post(friend_post INT UNSIGNED, friend_content VARCHAR(70))
         
         DECLARE post_cursor CURSOR FOR
 	    SELECT friend_id FROM friends
-            WHERE user_id = recent_post;
+            WHERE user_id = friend_post;
             
 	DECLARE CONTINUE HANDLER FOR NOT FOUND
 	    SET row_not_found = TRUE;
