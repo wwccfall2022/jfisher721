@@ -77,47 +77,48 @@ CREATE OR REPLACE VIEW notification_posts AS
 DELIMITER ;; 
 
 CREATE TRIGGER new_user
-	AFTER INSERT ON users
+    AFTER INSERT ON users
     FOR EACH ROW
 BEGIN
-	DECLARE not_new_user INT UNSIGNED;
+    DECLARE not_new_user INT UNSIGNED;
     DECLARE recent_post INT UNSIGNED;
-	DECLARE row_not_found TINYINT DEFAULT FALSE;
+    DECLARE row_not_found TINYINT DEFAULT FALSE
+    
     DECLARE user_cursor CURSOR FOR
-		SELECT u.user_id
-			FROM users u
-			WHERE u.user_id != NEW.user_id;
+	SELECT u.user_id
+	    FROM users u
+	WHERE u.user_id != NEW.user_id;
             
-	DECLARE CONTINUE HANDLER FOR NOT FOUND
-		SET row_not_found = TRUE;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND
+	SET row_not_found = TRUE;
     
     -- Creates the user joined posts
-	SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
+    SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
     
-	INSERT INTO posts
-		(user_id, content)
-	VALUES
-		(NEW.user_id, @new_content);
+    INSERT INTO posts
+	(user_id, content)
+    VALUES
+	(NEW.user_id, @new_content);
         
-	SET recent_post = LAST_INSERT_ID();
+    SET recent_post = LAST_INSERT_ID();
 	
     -- Creates the notification posts
-	OPEN user_cursor;
-	user_loop : LOOP
+    OPEN user_cursor;
+    user_loop : LOOP
 	
-	FETCH user_cursor INTO not_new_user;
+    	FETCH user_cursor INTO not_new_user;
 	
 	IF row_not_found THEN
 		LEAVE user_loop;
 	END IF;
 	
 	INSERT INTO notifications
-		(user_id, post_id)
+	    (user_id, post_id)
 	VALUES
-		(not_new_user, recent_post);
+	    (not_new_user, recent_post);
 		
-	END LOOP user_loop;
-	CLOSE user_cursor;
+    END LOOP user_loop;
+    CLOSE user_cursor;
 END ;;
 
 -- CREATE EVENT clear sessions
@@ -130,44 +131,44 @@ CREATE EVENT clear_sessions
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
-CREATE PROCEDURE add_post(user_id, content)
-	BEGIN
-	    DECLARE friend INT UNSIGNED;
-       	    DECLARE recent_post INT UNSIGNED;
-            DECLARE row_not_found INT DEFAULT FALSE;
+CREATE PROCEDURE add_post(user_id INT UNSIGNED, content VARCHAR(70))
+    BEGIN
+	DECLARE friend INT UNSIGNED;
+       	DECLARE recent_post INT UNSIGNED;
+        DECLARE row_not_found INT DEFAULT FALSE;
         
-            DECLARE post_cursor CURSOR FOR
-	        SELECT friend_id FROM friends
-                WHERE user_id = recent_post;
+        DECLARE post_cursor CURSOR FOR
+	    SELECT friend_id FROM friends
+            WHERE user_id = recent_post;
             
-	    DECLARE CONTINUE HANDLER FOR NOT FOUND
-	        SET row_not_found = TRUE;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND
+	    SET row_not_found = TRUE;
             
-	        SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
+	    SET @new_content = CONCAT(NEW.first_name, " ", NEW.last_name, " just joined!");
         
-	    INSERT INTO posts
-			(user_id, content)
-		VALUES
-			(recent_post, @new_content);
+	INSERT INTO posts
+	    (user_id, content)
+	VALUES
+	    (recent_post, @new_content);
 		
-            SET recent_post = LAST_INSERT_ID();
+        SET recent_post = LAST_INSERT_ID();
         
-            OPEN post_cursor;
-		post_loop : LOOP
-		FETCH post_cursor INTO friend;
-        	IF row_not_found THEN
-			LEAVE post_loop;
-		END IF;
+        OPEN post_cursor;
+	post_loop : LOOP
+	FETCH post_cursor INTO friend;
+        IF row_not_found THEN
+	    LEAVE post_loop;
+	END IF;
         
-            INSERT INTO notifications
-		(user_id, post_id)
-	    VALUES
-		(friend, recent_post);
+        INSERT INTO notifications
+	    user_id, post_id)
+	VALUES
+	    (friend, recent_post);
             
-	    END LOOP post_loop;
+	END LOOP post_loop;
         
-            CLOSE post_cursor;
-      END;;
+        CLOSE post_cursor;
+    END;;
  
 
 DELIMITER ;
