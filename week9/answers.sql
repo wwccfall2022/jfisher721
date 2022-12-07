@@ -161,7 +161,7 @@ CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
 	END IF;
         
         INSERT INTO notifications
-	    user_id, post_id)
+	    (user_id, post_id)
 	VALUES
 	    (friend, @new_content);
             
