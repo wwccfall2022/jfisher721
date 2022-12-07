@@ -120,7 +120,15 @@ BEGIN
 	CLOSE user_cursor;
 END ;;
 
--- CREATE EVENT end_sessions
+-- CREATE EVENT clear sessions
+CREATE EVENT clear_sessions
+    ON SCHEDULE EVERY 10 SECOND
+	DO
+        BEGIN
+	    DELETE FROM sessions
+            WHERE last_post < DATE_SUB(NOW(), INTERVAL 2 HOUR);
+        END;;
+
 -- CREATE PROCEDURE add_post(user_id, content)
  
 
