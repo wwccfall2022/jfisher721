@@ -202,7 +202,7 @@ BEGIN
     SELECT i.item_id INTO inventory_item
 	FROM inventory i
         WHERE equip_id = i.inventory_id;
-    DELETE FROM inventory
+    DELETE FROM inventory i
     	WHERE i.inventory_id = equip_id;
     INSERT INTO equipped
 	(character_id, item_id)
