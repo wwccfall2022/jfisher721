@@ -131,7 +131,7 @@ CREATE EVENT clear_sessions
         END;;
 
 -- CREATE PROCEDURE add_post(user_id, content)
-CREATE PROCEDURE add_post(friend INT UNSIGNED, recent_post VARCHAR(70))
+CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
     BEGIN
 	DECLARE friend INT UNSIGNED;
        	DECLARE recent_post INT UNSIGNED;
@@ -163,7 +163,7 @@ CREATE PROCEDURE add_post(friend INT UNSIGNED, recent_post VARCHAR(70))
         INSERT INTO notifications
 	    user_id, post_id)
 	VALUES
-	    (friend, recent_post);
+	    (friend, @new_content);
             
 	END LOOP post_loop;
         
