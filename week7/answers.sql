@@ -184,10 +184,10 @@ BEGIN
 	WHEN result > 0 THEN
 	    SET character_health = character_health - result;
 	    	
-	        WHEN character_health <= 0 THEN
+	        IF character_health <= 0 THEN
 	    	    DELETE FROM characters
             	    WHERE character_id = being_attacked;
-		
+		END IF;
             UPDATE character_stats SET health = character_health 
             WHERE character_id = being_attacked;
 			
