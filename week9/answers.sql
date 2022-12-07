@@ -149,7 +149,7 @@ CREATE PROCEDURE add_post(friend INT UNSIGNED, content VARCHAR(70))
 	INSERT INTO posts
 	    (user_id, content)
 	VALUES
-	    (recent_post, @new_content);
+	    (friend, recent_post);
 		
         SET recent_post = LAST_INSERT_ID();
         
